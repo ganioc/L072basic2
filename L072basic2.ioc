@@ -1,6 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
-FREERTOS.IPParameters=Tasks01
+FREERTOS.IPParameters=Tasks01,configUSE_TICKLESS_IDLE
 FREERTOS.Tasks01=defaultTask,0,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL
+FREERTOS.configUSE_TICKLESS_IDLE=2
 File.Version=6
 GPIO.groupedBy=Group By Peripherals
 KeepUserPlacement=false

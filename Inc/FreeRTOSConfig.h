@@ -42,14 +42,14 @@
  * See http://www.freertos.org/a00110.html
  *----------------------------------------------------------*/
 
-/* USER CODE BEGIN Includes */   	      
+/* USER CODE BEGIN Includes */
 /* Section where include file can be added */
-/* USER CODE END Includes */ 
+/* USER CODE END Includes */
 
 /* Ensure definitions are only used by the compiler, and not by the assembler. */
 #if defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)
-  #include <stdint.h>
-  extern uint32_t SystemCoreClock;
+#include <stdint.h>
+extern uint32_t SystemCoreClock;
 #endif
 #define configUSE_PREEMPTION                     1
 #define configSUPPORT_STATIC_ALLOCATION          1
@@ -65,13 +65,14 @@
 #define configUSE_16_BIT_TICKS                   0
 #define configUSE_MUTEXES                        1
 #define configQUEUE_REGISTRY_SIZE                8
+#define configUSE_TICKLESS_IDLE                  2
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES                    0
 #define configMAX_CO_ROUTINE_PRIORITIES          ( 2 )
 
 /* Set the following definitions to 1 to include the API function, or zero
-to exclude the API function. */
+ to exclude the API function. */
 #define INCLUDE_vTaskPrioritySet            1
 #define INCLUDE_uxTaskPriorityGet           1
 #define INCLUDE_vTaskDelete                 1
@@ -82,23 +83,38 @@ to exclude the API function. */
 #define INCLUDE_xTaskGetSchedulerState      1
 
 /* Normal assert() semantics without relying on the provision of an assert.h
-header file. */
+ header file. */
 /* USER CODE BEGIN 1 */
 #define configASSERT( x ) if ((x) == 0) {taskDISABLE_INTERRUPTS(); for( ;; );} 
 /* USER CODE END 1 */
 
+/* Demo specific macros that allow the application writer to insert code to be
+ executed immediately before the MCU's STOP low power mode is entered and exited
+ respectively.  These macros are in addition to the standard
+ configPRE_SLEEP_PROCESSING() and configPOST_SLEEP_PROCESSING() macros, which are
+ called pre and post the low power SLEEP mode being entered and exited.  These
+ macros can be used to turn turn off and on IO, clocks, the Flash etc. to obtain
+ the lowest power possible while the tick is off. */
+#if defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)
+void vMainPreStopProcessing(void);
+void vMainPostStopProcessing(void);
+#endif /* defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__) */
+
+#define configPRE_STOP_PROCESSING       vMainPreStopProcessing
+#define configPOST_STOP_PROCESSING	    vMainPostStopProcessing
+
 /* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
-standard names. */
+ standard names. */
 #define vPortSVCHandler    SVC_Handler
 #define xPortPendSVHandler PendSV_Handler
 
 /* IMPORTANT: This define is commented when used with STM32Cube firmware, when the timebase source is SysTick,
-              to prevent overwriting SysTick_Handler defined within STM32Cube HAL */
- 
+ to prevent overwriting SysTick_Handler defined within STM32Cube HAL */
+
 #define xPortSysTickHandler SysTick_Handler
 
-/* USER CODE BEGIN Defines */   	      
+/* USER CODE BEGIN Defines */
 /* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
-/* USER CODE END Defines */ 
+/* USER CODE END Defines */
 
 #endif /* FREERTOS_CONFIG_H */
