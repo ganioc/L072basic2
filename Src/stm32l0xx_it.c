@@ -58,8 +58,8 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern LPTIM_HandleTypeDef hlptim1;
-extern TIM_HandleTypeDef htim2;
+extern LPTIM_HandleTypeDef LptimHandle;
+// extern TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN EV */
 
@@ -125,25 +125,25 @@ void LPTIM1_IRQHandler(void)
   /* USER CODE BEGIN LPTIM1_IRQn 0 */
 
   /* USER CODE END LPTIM1_IRQn 0 */
-  HAL_LPTIM_IRQHandler(&hlptim1);
+  HAL_LPTIM_IRQHandler(&LptimHandle);
   /* USER CODE BEGIN LPTIM1_IRQn 1 */
-
+  __HAL_LPTIM_CLEAR_FLAG(&LptimHandle, 0x1F);
   /* USER CODE END LPTIM1_IRQn 1 */
 }
 
 /**
   * @brief This function handles TIM2 global interrupt.
   */
-void TIM2_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM2_IRQn 0 */
-
-  /* USER CODE END TIM2_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim2);
-  /* USER CODE BEGIN TIM2_IRQn 1 */
-
-  /* USER CODE END TIM2_IRQn 1 */
-}
+//void TIM2_IRQHandler(void)
+//{
+//  /* USER CODE BEGIN TIM2_IRQn 0 */
+//
+//  /* USER CODE END TIM2_IRQn 0 */
+//  HAL_TIM_IRQHandler(&htim2);
+//  /* USER CODE BEGIN TIM2_IRQn 1 */
+//
+//  /* USER CODE END TIM2_IRQn 1 */
+//}
 
 /* USER CODE BEGIN 1 */
 /**
