@@ -90,7 +90,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_LPTIM1_Init();
+  // MX_LPTIM1_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
 
@@ -121,7 +121,7 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  // RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Configure the main internal regulator output voltage 
   */
@@ -155,18 +155,41 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_LPTIM1;
-  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-  PeriphClkInit.LptimClockSelection = RCC_LPTIM1CLKSOURCE_LSE;
-
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-  {
-    Error_Handler();
-  }
+//  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_LPTIM1;
+//  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+//  PeriphClkInit.LptimClockSelection = RCC_LPTIM1CLKSOURCE_LSE;
+//
+//  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+//  {
+//    Error_Handler();
+//  }
 }
 
 /* USER CODE BEGIN 4 */
+void vMainPreStopProcessing(void)
+{
+	// GPIO_ConfigAN();
+}
 
+
+void vMainPostStopProcessing(void)
+{
+	/* Enable the Internal High Speed oscillator (MSI). */
+  __HAL_RCC_MSI_ENABLE();
+
+	/* Selects the Multiple Speed oscillator (MSI) clock range .*/
+  __HAL_RCC_MSI_RANGE_CONFIG (RCC_MSIRANGE_5);
+  /* Adjusts the Multiple Speed oscillator (MSI) calibration value.*/
+  __HAL_RCC_MSI_CALIBRATIONVALUE_ADJUST(0x00);
+
+	MODIFY_REG(RCC->CFGR, RCC_CFGR_SW, RCC_SYSCLKSOURCE_MSI);
+
+  /* Update the SystemCoreClock global variable */
+  SystemCoreClock =  HAL_RCC_GetSysClockFreq() >> AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> 4)];
+
+  // BSP_LED_Init(LED2);
+
+}
 /* USER CODE END 4 */
 
  /**
