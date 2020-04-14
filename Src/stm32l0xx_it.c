@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    stm32l0xx_it.c
-  * @brief   Interrupt Service Routines.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    stm32l0xx_it.c
+ * @brief   Interrupt Service Routines.
+ ******************************************************************************
+ * @attention
+ *
+ * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+ * All rights reserved.</center></h2>
+ *
+ * This software component is licensed by ST under Ultimate Liberty license
+ * SLA0044, the "License"; You may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at:
+ *                             www.st.com/SLA0044
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
@@ -34,7 +34,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- 
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -66,34 +66,34 @@ extern LPTIM_HandleTypeDef LptimHandle;
 /* USER CODE END EV */
 
 /******************************************************************************/
-/*           Cortex-M0+ Processor Interruption and Exception Handlers          */ 
+/*           Cortex-M0+ Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
-  * @brief This function handles Non maskable Interrupt.
-  */
+ * @brief This function handles Non maskable Interrupt.
+ */
 void NMI_Handler(void)
 {
-  /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
+	/* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
-  /* USER CODE END NonMaskableInt_IRQn 0 */
-  /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
+	/* USER CODE END NonMaskableInt_IRQn 0 */
+	/* USER CODE BEGIN NonMaskableInt_IRQn 1 */
 
-  /* USER CODE END NonMaskableInt_IRQn 1 */
+	/* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
 /**
-  * @brief This function handles Hard fault interrupt.
-  */
+ * @brief This function handles Hard fault interrupt.
+ */
 void HardFault_Handler(void)
 {
-  /* USER CODE BEGIN HardFault_IRQn 0 */
+	/* USER CODE BEGIN HardFault_IRQn 0 */
 
-  /* USER CODE END HardFault_IRQn 0 */
-  while (1)
-  {
-    /* USER CODE BEGIN W1_HardFault_IRQn 0 */
-    /* USER CODE END W1_HardFault_IRQn 0 */
-  }
+	/* USER CODE END HardFault_IRQn 0 */
+	while (1)
+	{
+		/* USER CODE BEGIN W1_HardFault_IRQn 0 */
+		/* USER CODE END W1_HardFault_IRQn 0 */
+	}
 }
 
 /******************************************************************************/
@@ -104,36 +104,45 @@ void HardFault_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles EXTI line 4 to 15 interrupts.
-  */
+ * @brief This function handles EXTI line 4 to 15 interrupts.
+ */
 void EXTI4_15_IRQHandler(void)
 {
-  /* USER CODE BEGIN EXTI4_15_IRQn 0 */
+	/* USER CODE BEGIN EXTI4_15_IRQn 0 */
 
-  /* USER CODE END EXTI4_15_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
-  /* USER CODE BEGIN EXTI4_15_IRQn 1 */
+	/* USER CODE END EXTI4_15_IRQn 0 */
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
+	/* USER CODE BEGIN EXTI4_15_IRQn 1 */
 
-  /* USER CODE END EXTI4_15_IRQn 1 */
+	/* USER CODE END EXTI4_15_IRQn 1 */
 }
 
 /**
-  * @brief This function handles LPTIM1 global interrupt / LPTIM1 wake-up interrupt through EXTI line 29.
-  */
+ * @brief This function handles LPTIM1 global interrupt / LPTIM1 wake-up interrupt through EXTI line 29.
+ */
 void LPTIM1_IRQHandler(void)
 {
-  /* USER CODE BEGIN LPTIM1_IRQn 0 */
+	/* USER CODE BEGIN LPTIM1_IRQn 0 */
 
-  /* USER CODE END LPTIM1_IRQn 0 */
-  HAL_LPTIM_IRQHandler(&LptimHandle);
-  /* USER CODE BEGIN LPTIM1_IRQn 1 */
-  __HAL_LPTIM_CLEAR_FLAG(&LptimHandle, 0x1F);
-  /* USER CODE END LPTIM1_IRQn 1 */
+	/* USER CODE END LPTIM1_IRQn 0 */
+	/* Compare match interrupt */
+	if (__HAL_LPTIM_GET_FLAG(&LptimHandle, LPTIM_FLAG_CMPM) != RESET)
+	{
+		/* Clear Compare match flag */
+		__HAL_LPTIM_CLEAR_FLAG(&LptimHandle, LPTIM_FLAG_CMPM);
+
+		/* Compare match Callback */
+		HAL_LPTIM_CompareMatchCallback(&LptimHandle);
+	}
+	__HAL_LPTIM_CLEAR_FLAG(&LptimHandle, 0x1F);
+	/* USER CODE BEGIN LPTIM1_IRQn 1 */
+	// __HAL_LPTIM_CLEAR_FLAG(&LptimHandle, 0x1F);
+	/* USER CODE END LPTIM1_IRQn 1 */
 }
 
 /**
-  * @brief This function handles TIM2 global interrupt.
-  */
+ * @brief This function handles TIM2 global interrupt.
+ */
 //void TIM2_IRQHandler(void)
 //{
 //  /* USER CODE BEGIN TIM2_IRQn 0 */
@@ -144,13 +153,12 @@ void LPTIM1_IRQHandler(void)
 //
 //  /* USER CODE END TIM2_IRQn 1 */
 //}
-
 /* USER CODE BEGIN 1 */
 /**
-  * @brief  This function handles SysTick Handler.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles SysTick Handler.
+ * @param  None
+ * @retval None
+ */
 void SysTick_Handler(void)
 {
 }
