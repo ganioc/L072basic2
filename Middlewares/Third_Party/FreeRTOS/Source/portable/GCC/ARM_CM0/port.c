@@ -75,7 +75,7 @@ debugger. */
 /*
  * Setup the timer to generate the tick interrupts.
  */
-static void prvSetupTimerInterrupt( void );
+void vPortSetupTimerInterrupt( void );
 
 /*
  * Exception handlers.
@@ -219,7 +219,7 @@ BaseType_t xPortStartScheduler( void )
 
 	/* Start the timer that generates the tick ISR.  Interrupts are disabled
 	here already. */
-	prvSetupTimerInterrupt();
+	vPortSetupTimerInterrupt();
 
 	/* Initialise the critical nesting count ready for the first task. */
 	uxCriticalNesting = 0;
@@ -538,7 +538,7 @@ uint32_t ulPreviousMask;
  * Setup the systick timer to generate the tick interrupts at the required
  * frequency.
  */
-void prvSetupTimerInterrupt( void )
+__attribute__(( weak ))   void vPortSetupTimerInterrupt( void )
 {
  /* Calculate the constants required to configure the tick interrupt. */
  #if configUSE_TICKLESS_IDLE == 1

@@ -31,12 +31,14 @@
 /* Set the Compare value that defines the duty cycle */
 #define PulseValue (uint32_t)(15 - 1)
 
+
+LPTIM_HandleTypeDef LptimHandle;
+
 __IO uint32_t ulTickInit = 0;
 
 /* Clocks structure declaration */
 RCC_PeriphCLKInitTypeDef RCC_PeriphCLKInitStruct;
 
-LPTIM_HandleTypeDef LptimHandle;
 
 extern uint32_t ulTickFlag;
 
@@ -106,6 +108,43 @@ void MX_LPTIM1_Init(void)
 //}
 
 /* USER CODE BEGIN 1 */
+
+/**
+* @brief  LPTIM MSP Init
+* @param  hlptim : LPTIM handle
+* @retval None
+*/
+void HAL_LPTIM_MspInit(LPTIM_HandleTypeDef *hlptim)
+{
+  GPIO_InitTypeDef     GPIO_InitStruct;
+
+  /* ## - 1 - Enable LPTIM clock ############################################ */
+  __HAL_RCC_LPTIM1_CLK_ENABLE();
+
+  /* ## - 2 - Force & Release the LPTIM Periheral Clock Reset ############### */
+  /* Force the LPTIM Periheral Clock Reset */
+  __HAL_RCC_LPTIM1_FORCE_RESET();
+  /* Release the LPTIM Periheral Clock Reset */
+  __HAL_RCC_LPTIM1_RELEASE_RESET();
+
+  /* ## - 3 - Enable & Configure LPTIM Output ############################### */
+  /* Configure PC1 (LPTIM1_OUT) in alternate function (AF0), Low speed
+  push-pull mode and pull-up enabled.
+  Note: In order to reduce power consumption: GPIO Speed is configured in
+  LowSpeed */
+
+  /* Enable GPIO PORT C */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+
+  /* Configure PC1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW     ;
+  GPIO_InitStruct.Alternate = GPIO_AF0_LPTIM1;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+}
+
 /**
 * @brief  This function configures the LPTIM to generate an interrupt each 1ms.
   * @param  TickPriority: Tick interrupt priority.
