@@ -136,7 +136,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
-  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_5;
+  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -178,7 +178,7 @@ void vMainPostStopProcessing(void)
   __HAL_RCC_MSI_ENABLE();
 
 	/* Selects the Multiple Speed oscillator (MSI) clock range .*/
-  __HAL_RCC_MSI_RANGE_CONFIG (RCC_MSIRANGE_5);
+  __HAL_RCC_MSI_RANGE_CONFIG (RCC_MSIRANGE_6);
   /* Adjusts the Multiple Speed oscillator (MSI) calibration value.*/
   __HAL_RCC_MSI_CALIBRATIONVALUE_ADJUST(0x00);
 
