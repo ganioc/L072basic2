@@ -134,8 +134,10 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	toggleStateLED();
-    osDelay(2000);
+	onStateLED();
+    osDelay(1000);
+    offStateLED();
+    osDelay(4000);
 
   }
   /* USER CODE END StartDefaultTask */
